@@ -4,7 +4,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-
 body{
   margin:0;
   background:#ccc;
@@ -15,24 +14,62 @@ body{
   align-items:center;
 }
 
+#wrap{
+  text-align:center;
+}
+
+#visitor{
+  position:fixed;
+  top:20px;
+  left:50%;
+  transform:translateX(-50%);
+  color:#000;
+}
+
 #url{
   position:fixed;
   bottom:20px;
   left:50%;
   transform:translateX(-50%);
 }
-
 </style>
 
 </head>
 
 <body>
 
-BATTERY
+<div id="visitor"></div>
+
+<div id="wrap">
+  BATTERY
+</div>
 
 <div id="url">
 www.battery-us.com
 </div>
+
+<script>
+// random system font each refresh (no external loads)
+const fonts = [
+  "sans-serif",
+  "serif",
+  "monospace",
+  "system-ui",
+  "-apple-system",
+  "Arial, sans-serif",
+  "Helvetica, Arial, sans-serif",
+  "Verdana, sans-serif",
+  "Georgia, serif",
+  "'Times New Roman', Times, serif",
+  "'Courier New', Courier, monospace"
+];
+
+document.body.style.fontFamily = fonts[Math.floor(Math.random() * fonts.length)];
+
+// VISITOR id (new each refresh)
+const id = Math.floor(100000 + Math.random() * 900000);
+document.getElementById("visitor").textContent = "VISITOR " + id;
+</script>
 
 </body>
 </html>
