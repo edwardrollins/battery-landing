@@ -6,7 +6,7 @@
 <style>
 body{
   margin:0;
-  background:#ccc;
+  background:white;
   height:100vh;
   font-family:sans-serif;
   display:flex;
@@ -18,19 +18,22 @@ body{
   text-align:center;
 }
 
-#visitor{
-  position:fixed;
-  top:20px;
-  left:50%;
-  transform:translateX(-50%);
-  color:#000;
+#soon{
+  display:none;
+  margin-top:20px;
 }
 
-#url{
-  position:fixed;
-  bottom:20px;
-  left:50%;
-  transform:translateX(-50%);
+#refresh{
+  display:none;
+  margin-top:10px;
+  color:blue;
+  cursor:pointer;
+  user-select:none;
+}
+
+iframe{
+  margin-top:20px;
+  border:none;
 }
 </style>
 
@@ -38,37 +41,62 @@ body{
 
 <body>
 
-<div id="visitor"></div>
-
 <div id="wrap">
-  BATTERY
-</div>
 
-<div id="url">
-www.battery-us.com
+<div>BATTERY</div>
+
+<iframe
+  id="captcha"
+  src="https://embed.neal.fun/not-a-robot/1"
+  width="400"
+  height="540"
+  scrolling="no"
+  allow="autoplay 'none'; microphone 'none'; camera 'none';">
+</iframe>
+
+<div id="soon">COMING SOON</div>
+<div id="refresh" onclick="location.reload()">↻</div>
+
 </div>
 
 <script>
-// random system font each refresh (no external loads)
-const fonts = [
-  "sans-serif",
-  "serif",
-  "monospace",
-  "system-ui",
-  "-apple-system",
-  "Arial, sans-serif",
-  "Helvetica, Arial, sans-serif",
-  "Verdana, sans-serif",
-  "Georgia, serif",
-  "'Times New Roman', Times, serif",
-  "'Courier New', Courier, monospace"
+let completed = 0;
+
+const embeds = [
+  "https://embed.neal.fun/not-a-robot/1",
+  "https://embed.neal.fun/not-a-robot/2",
+  "https://embed.neal.fun/not-a-robot/3"
 ];
 
-document.body.style.fontFamily = fonts[Math.floor(Math.random() * fonts.length)];
+function setCaptcha(i){
+  document.getElementById("captcha").src = embeds[Math.min(i, embeds.length - 1)];
+}
 
-// VISITOR id (new each refresh)
-const id = Math.floor(100000 + Math.random() * 900000);
-document.getElementById("visitor").textContent = "VISITOR " + id;
+function finishAll(){
+  document.getElementById("captcha").style.display = "none";
+  document.getElementById("soon").style.display = "block";
+  document.getElementById("refresh").style.display = "block";
+}
+
+window.addEventListener("message", (event) => {
+
+  const d = event.data;
+
+  const completedEvent =
+    (typeof d === "string" && /complete|success/i.test(d)) ||
+    (d && typeof d === "object" && (d.completed || d.success));
+
+  if(!completedEvent) return;
+
+  completed++;
+
+  if(completed >= 3){
+    finishAll();
+  }else{
+    setCaptcha(completed);
+  }
+
+});
 </script>
 
 </body>
